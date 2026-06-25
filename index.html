@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acme Dashboard — Streamline Your Business</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 200ms ease;
+        }
+
+        /* --- LAYOUT UTILITIES (Vanilla Grid/Flex) --- */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .section {
+            padding: 96px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 500ms ease-out, transform 500ms ease-out;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 200ms ease, border-color 200ms ease;
+        }
+        .btn-primary {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #000000;
+        }
+        .btn-primary:hover {
+            background-color: #333333;
+            border-color: #333333;
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #1a1a1a;
+            border: 1px solid #e5e7eb;
+        }
+        .btn-secondary:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* --- MOCKUP PLACEHOLDERS --- */
+        .mockup-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .mockup-inner {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #ffffff;
+        }
+        .mockup-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+        }
+
+        /* --- 1. NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            transition: border-bottom 200ms ease;
+            border-bottom: 1px solid transparent;
+        }
+        .navbar.scrolled {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #1a1a1a;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- 2. HERO --- */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 96px;
+        }
+        .hero-content {
+            max-width: 768px;
+            margin-bottom: 48px;
+        }
+        .hero-heading {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+        }
+        .hero-subtext {
+            font-size: 20px;
+            line-height: 1.5;
+            color: #6b7280;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+        .hero-ctas {
+            display: flex;
+            gap: 12px;
+        }
+        .hero-screenshot {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-mock-body {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .hero-mock-line {
+            height: 16px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+        }
+
+        /* --- 3. LOGOS BAR --- */
+        .logos-bar {
+            padding: 48px 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .logos-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        .logos-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 64px;
+            flex-wrap: wrap;
+        }
+        .logo-item {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9ca3af;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- 4. FEATURES --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .feature-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            background-color: #ffffff;
+            transition: border-color 200ms ease, transform 200ms ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card:hover {
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #6b7280;
+        }
+
+        /* --- 5. HOW IT WORKS --- */
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 64px auto;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .section-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 64px;
+            margin-bottom: 96px;
+        }
+        .step-row:last-child {
+            margin-bottom: 0;
+        }
+        .step-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-mockup {
+            flex: 1;
+            aspect-ratio: 16 / 10;
+            height: 320px;
+        }
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .step-heading {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+        .step-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #6b7280;
+        }
+
+        /* --- 6. PRICING --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            max-width: 840px;
+            margin: 0 auto;
+        }
+        .price-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .price-card.premium {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        .price-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .price-tier {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        .price-card.premium .price-tier {
+            color: #9ca3af;
+        }
+        .price-amount {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        .price-amount span {
+            font-size: 16px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        .price-card.premium .price-amount span {
+            color: #9ca3af;
+        }
+        .price-features {
+            list-style: none;
+            margin-bottom: 40px;
+            flex: 1;
+        }
+        .price-feature-item {
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .price-feature-item::before {
+            content: "✓";
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .price-card.premium .price-feature-item::before {
+            color: #ffffff;
+        }
+        .price-card .btn {
+            width: 100%;
+        }
+        .price-card.premium .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+        .price-card.premium .btn-primary:hover {
+            background-color: #f3f4f6;
+            border-color: #f3f4f6;
+        }
+
+        /* --- 7. CTA BANNER --- */
+        .cta-banner {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            text-align: center;
+            padding: 80px 0;
+            border-radius: 0;
+        }
+        .cta-container {
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        .cta-title {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .cta-desc {
+            font-size: 16px;
+            color: #9ca3af;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* --- 8. FOOTER --- */
+        .footer {
+            padding: 64px 0 48px 0;
+            border-top: 1px solid #e5e7eb;
+            background-color: #ffffff;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+        .footer-col-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .footer-links a:hover {
+            color: #1a1a1a;
+        }
+        .footer-bottom {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 24px;
+            font-size: 13px;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- MOBILE RESPONSIVENESS (375px Breakpoint) --- */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Hide for true Notion minimal mobile experience */
+            }
+            .hero-heading {
+                font-size: 36px;
+            }
+            .hero-subtext {
+                font-size: 16px;
+            }
+            .hero-ctas {
+                flex-direction: column;
+            }
+            .logos-grid {
+                gap: 24px 32px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .step-row, .step-row:nth-child(even) {
+                flex-direction: column;
+                gap: 24px;
+                margin-bottom: 64px;
+            }
+            .step-mockup {
+                width: 100%;
+                height: 200px;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">▲ AcmeCo</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How it works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#pricing" class="btn btn-primary">Get started free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO -->
+    <section class="section hero container">
+        <div class="hero-content">
+            <h1 class="hero-heading">The clean workspace<br>for your business<br>metrics.</h1>
+            <p class="hero-subtext">All your core operations, financial streams, and team velocities tracking flawlessly within a singular, beautifully minimized engineering dashboard.</p>
+            <div class="hero-ctas">
+                <a href="#pricing" class="btn btn-primary">Get started free</a>
+                <a href="#features" class="btn btn-secondary">Explore features</a>
+            </div>
+        </div>
+        <div class="hero-screenshot mockup-card">
+            <div class="mockup-inner">
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+            </div>
+            <div class="hero-mock-body">
+                <div class="hero-mock-line" style="width: 40%; height: 24px; margin-bottom: 12px;"></div>
+                <div style="display: flex; gap: 16px; flex: 1;">
+                    <div class="mockup-card" style="flex: 2; background: #ffffff; padding: 16px;">
+                        <div class="hero-mock-line" style="width: 80%; margin-bottom: 12px;"></div>
+                        <div class="hero-mock-line" style="width: 60%; margin-bottom: 12px;"></div>
+                        <div class="hero-mock-line" style="width: 45%;"></div>
+                    </div>
+                    <div class="mockup-card" style="flex: 1; background: #ffffff; padding: 16px;">
+                        <div class="hero-mock-line" style="width: 90%; margin-bottom: 12px;"></div>
+                        <div class="hero-mock-line" style="width: 30%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. LOGOS BAR -->
+    <div class="logos-bar">
+        <div class="container">
+            <div class="logos-title">Trusted by teams at</div>
+            <div class="logos-grid">
+                <div class="logo-item">Stripe</div>
+                <div class="logo-item">Linear</div>
+                <div class="logo-item">Vercel</div>
+                <div class="logo-item">Figma</div>
+                <div class="logo-item">Notion</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. FEATURES -->
+    <section class="section container" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Reengineered from the ground up</h2>
+            <p class="section-subtitle">No bloat. No unnecessary charts. Just raw, high-fidelity business intelligence structured perfectly.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Realtime Pipeline</div>
+                <div class="feature-desc">Instantly streams operational telemetry and database structural queries seamlessly.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Enterprise Security</div>
+                <div class="feature-desc">Strict end-to-end data safety mechanics and complete localized system governance.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Advanced Reporting</div>
+                <div class="feature-desc">Generate aggregated database exports into highly clean, structured Markdown reports.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. HOW IT WORKS -->
+    <section class="section container" id="how-it-works">
+        <div class="section-header">
+            <h2 class="section-title">Simplicity in execution</h2>
+            <p class="section-subtitle">Three structural steps to completely centralize your entire organizational dataset orchestration.</p>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-row">
+            <div class="step-content">
+                <div class="step-badge">1</div>
+                <h3 class="step-heading">Connect your ecosystem</h3>
+                <p class="step-desc">Inject secure API keys directly into your workspace credentials safely. Seamless native system synchronization begins tracking completely automatically inside minutes.</p>
+            </div>
+            <div class="step-mockup mockup-card">
+                <div class="mockup-inner"><div class="mockup-dot"></div><div class="mockup-dot"></div></div>
+                <div style="padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+                    <div class="hero-mock-line" style="width: 50%; background: #d1d5db;"></div>
+                    <div class="hero-mock-line" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-row">
+            <div class="step-content">
+                <div class="step-badge">2</div>
+                <h3 class="step-heading">Configure your views</h3>
+                <p class="step-desc">Establish strict typographic metric hierarchies. Organize structural columns, relational filter attributes, and global parameters with intuitive layout features.</p>
+            </div>
+            <div class="step-mockup mockup-card">
+                <div class="mockup-inner"><div class="mockup-dot"></div><div class="mockup-dot"></div></div>
+                <div style="padding: 24px; display: flex; gap: 12px;">
+                    <div style="width: 30%; height: 120px; background: #e5e7eb; border-radius: 4px;"></div>
+                    <div style="flex: 1; height: 120px; background: #f3f4f6; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-row">
+            <div class="step-content">
+                <div class="step-badge">3</div>
+                <h3 class="step-heading">Automate deep analysis</h3>
+                <p class="step-desc">Schedule recursive system cron-jobs that isolate analytical bottlenecks, delivering beautiful telemetry directly into team channels perfectly.</p>
+            </div>
+            <div class="step-mockup mockup-card">
+                <div class="mockup-inner"><div class="mockup-dot"></div><div class="mockup-dot"></div></div>
+                <div style="padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+                    <div class="hero-mock-line" style="width: 100%; height: 40px; background: #f3f4f6;"></div>
+                    <div class="hero-mock-line" style="width: 85%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. PRICING -->
+    <section class="section container" id="pricing">
+        <div class="section-header">
+            <h2 class="section-title">Transparent, flexible pricing</h2>
+            <p class="section-subtitle">Choose the tier that scales fluidly alongside your operational engineering infrastructure frameworks.</p>
+        </div>
+        <div class="pricing-grid">
+            <!-- Free Tier -->
+            <div class="price-card">
+                <div class="price-tier">Starter</div>
+                <div class="price-amount">$0<span>/ month</span></div>
+                <ul class="price-features">
+                    <li class="price-feature-item">Up to 3 distinct pipelines</li>
+                    <li class="price-feature-item">7-day historical telemetry retention</li>
+                    <li class="price-feature-item">Standard typography profiles</li>
+                    <li class="price-feature-item">Basic localized system exports</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Get started free</a>
+            </div>
+            <!-- Pro Tier -->
+            <div class="price-card premium">
+                <div class="price-badge">Most popular</div>
+                <div class="price-tier">Professional</div>
+                <div class="price-amount">$24<span>/ month</span></div>
+                <ul class="price-features">
+                    <li class="price-feature-item">Infinite data processing pipes</li>
+                    <li class="price-feature-item">Complete historical archiving</li>
+                    <li class="price-feature-item">Advanced operational security controls</li>
+                    <li class="price-feature-item">Dedicated API engineering assistance</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Upgrade to Pro</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CTA BANNER -->
+    <section class="section cta-banner">
+        <div class="container cta-container">
+            <h2 class="cta-title">Upgrade your architecture today.</h2>
+            <p class="cta-desc">Join thousands of high-velocity technical teams optimizing their core business metrics structural layout with maximum efficiency.</p>
+            <a href="#pricing" class="btn btn-primary" style="background: #ffffff; color: #000000; border-color: #ffffff;">Get started now</a>
+        </div>
+    </section>
+
+    <!-- 8. FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-col-title">Product</div>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Changelog</a></li>
+                        <li><a href="#">Docs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Company</div>
+                    <ul class="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Resources</div>
+                    <ul class="footer-links">
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Developers</div>
+                    <ul class="footer-links">
+                        <li><a href="#">API Status</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Network Guide</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>© 2026 AcmeCo, Inc. All rights reserved framework architectures.</div>
+                <div>Built following exact geometric minimal constraints.</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- --- JAVASCRIPT ANIMATIONS & INTERACTIONS --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. NAVBAR SCROLL EFFECT
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 60) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // 2. INTERSECTION OBSERVER FOR SECTIONS
+            const sectionOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // 3. STAGGERED ANIMATION FOR FEATURE CARDS
+                        if (entry.target.id === 'features') {
+                            const cards = entry.target.querySelectorAll('.feature-card');
+                            cards.forEach((card, index) => {
+                                setTimeout(() => {
+                                    card.classList.add('visible');
+                                }, index * 100); // 100ms precise staggering delay
+                            });
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, sectionOptions);
+
+            document.querySelectorAll('.section').forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // 4. SMOOTH SCROLL FOR ANCHOR LINKS
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        
+                        // Calculate navbar height offset
+                        const navOffset = 64;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
